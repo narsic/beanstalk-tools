@@ -7,7 +7,7 @@ require 'optparse'
 
 options = {}
 optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: beanstalk-val.rb [options]"
+  opts.banner = "Usage: beanstalk-count.rb [options]"
   opts.on("-h", "--host HOST", "beanstalk host") do | host|
     options[:host] = host
   end
@@ -75,11 +75,12 @@ if val.nil?
 end
 
 status, msg = if val > options[:error]
-  [2, "CRITICAL - Too many outstanding #{stat}:  #{val}.  Error limit: #{options[:error]}"]
+  [2, "CRITICAL - Too many outstanding #{stat}:  #{val}.  Error limit: #{options[:error]} | '#{stat}'=#{val}"]
 elsif val > options[:warn]
-  [1, "WARNING - Too many outstanding #{stat}:  #{val}.  Warn limit: #{options[:warn]}"]
+  [1, "WARNING - Too many outstanding #{stat}:  #{val}.  Warn limit: #{options[:warn]} | '#{stat}'=#{val}"]
 else
-  [0, "OK - #{val} #{stat} found."]
+  [0, "OK - #{val} #{stat} found. | '#{stat}'=#{val}"]
+
 end
 
 puts msg

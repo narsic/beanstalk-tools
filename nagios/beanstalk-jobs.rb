@@ -65,11 +65,11 @@ end
 jobs = stats['current-jobs-ready'] + stats['current-jobs-delayed']
 
 status, msg = if jobs > options[:error]
-  [2, "CRITICAL - Too many outstanding jobs:  #{jobs}.  Error limit: #{options[:error]}"]
+  [2, "CRITICAL - Too many outstanding jobs:  #{jobs}.  Error limit: #{options[:error]} | 'Ready Jobs'=#{jobs}"]
 elsif jobs > options[:warn]
-  [1, "WARNING - Too many outstanding jobs:  #{jobs}.  Warn limit: #{options[:warn]}"]
+  [1, "WARNING - Too many outstanding jobs:  #{jobs}.  Warn limit: #{options[:warn]} | 'Ready Jobs'=#{jobs}"]
 else
-  [0, "OK - #{jobs} jobs found."]
+  [0, "OK - #{jobs} jobs found. | 'Ready Jobs'=#{jobs}"]
 end
 
 puts msg
