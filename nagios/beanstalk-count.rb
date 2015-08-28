@@ -7,7 +7,7 @@ require 'optparse'
 
 options = {}
 optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: beanstalk-val.rb [options]"
+  opts.banner = "Usage: beanstalk-count.rb [options]"
   opts.on("-h", "--host HOST", "beanstalk host") do | host|
     options[:host] = host
   end
