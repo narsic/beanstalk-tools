@@ -69,7 +69,7 @@ status, msg = if jobs > options[:error]
 elsif jobs > options[:warn]
   [1, "WARNING - Too many outstanding jobs:  #{jobs}.  Warn limit: #{options[:warn]}"]
 else
-  [0, "OK - #{jobs} jobs found."]
+  [0, "OK - #{jobs} jobs found. | 'Ready Jobs'=#{jobs}"]
 end
 
 puts msg
