@@ -3,9 +3,10 @@
 require 'rubygems'
 require 'beanstalk-client'
 
-B = Beanstalk::Connection.new $*[0]
 
-tubes = $*[1..-1]
+B = Beanstalk::Connection.new ARGV[0]
+
+tubes = $*[2..-1]
 tubes = B.list_tubes if tubes.empty?
 
 def delta(v)
@@ -35,5 +36,8 @@ loop do
     puts ""
     previously[tube] = ts
   end
+    if ARGV[1] == "true"
+        exit
+    end
   sleep 5 
 end
