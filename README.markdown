@@ -2,6 +2,7 @@
 
 Here is a small collection of tools for watching, monitoring, and
 manipulating beanstalkd.
+These tools require Ruby and the beanstalk-client gem.
 
 ## Interactive Commands
 
