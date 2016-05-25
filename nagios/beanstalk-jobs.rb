@@ -51,26 +51,31 @@ end
 
 connection = Beanstalk::Connection.new("#{options[:host]}:#{options[:port]}")
 
-if options[:tube]
-  begin
-    stats = connection.stats_tube(options[:tube])
-  rescue Beanstalk::NotFoundError
-    puts "Tube #{options[:tube]} not found." 
-    exit
+loop do
+  if options[:tube]
+    begin
+      stats = connection.stats_tube(options[:tube])
+    rescue Beanstalk::NotFoundError
+      puts "Tube #{options[:tube]} not found." 
+      exit
+    end
+  else
+    stats = connection.stats
   end
-else
- stats = connection.stats
+
+  jobs = stats['current-jobs-ready'] + stats['current-jobs-delayed']
+
+  status, msg = if jobs > options[:error]
+    [2, "CRITICAL - Too many outstanding jobs:  #{jobs}.  Error limit: #{options[:error]} | 'Ready Jobs'=#{jobs}"]
+  elsif jobs > options[:warn]
+    [1, "WARNING - Too many outstanding jobs:  #{jobs}.  Warn limit: #{options[:warn]} | 'Ready Jobs'=#{jobs}"]
+  else
+    [0, "OK - #{jobs} jobs found. | 'Ready Jobs'=#{jobs}"]
+  end
+  puts msg
+  if ARGV[0] === "exit"
+    exit 0
+  end
+  sleep 5
 end
 
-jobs = stats['current-jobs-ready'] + stats['current-jobs-delayed']
-
-status, msg = if jobs > options[:error]
-  [2, "CRITICAL - Too many outstanding jobs:  #{jobs}.  Error limit: #{options[:error]} | 'Ready Jobs'=#{jobs}"]
-elsif jobs > options[:warn]
-  [1, "WARNING - Too many outstanding jobs:  #{jobs}.  Warn limit: #{options[:warn]} | 'Ready Jobs'=#{jobs}"]
-else
-  [0, "OK - #{jobs} jobs found. | 'Ready Jobs'=#{jobs}"]
-end
-
-puts msg
-exit status
